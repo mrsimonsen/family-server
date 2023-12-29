@@ -6,4 +6,4 @@ active virtual environment: ```source .venv/bin/activate```
 
 
 [Tutorial](https://www.sitepoint.com/django-photo-sharing-app/) - 
-Currently on: Creating the Photo Model 
+Currently on: Managing Media Files in Development
