@@ -29,6 +29,9 @@ ALLOWED_HOSTS = []
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media/'
+LOGIN_URL = 'user:login'
+LOGIN_REDIRECT_URL = 'photo:list'
+LOGOUT_REDIRECT_URL = 'photo:list'
 
 
 # Application definition
@@ -44,6 +47,7 @@ INSTALLED_APPS = [
 	'taggit',
 	#custom apps
 	'photoapp',
+	'users',
 ]
 
 # Django taggit
