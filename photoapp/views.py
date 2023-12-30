@@ -1,5 +1,7 @@
 from typing import Any
 from django.db.models.query import QuerySet
+from django.forms.models import BaseModelForm
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import PermissionDenied
@@ -28,4 +30,39 @@ class PhotoTagListView(PhotoListView):
 		context = super().get_context_data(**kwargs)
 		context["tag"] = self.get_tag()
 		return context
+
+class PhotoDetailView(DetailView):
+	model = Photo
+	template_name = 'photoapp/detal.html'
+	context_object_name = 'photo'
+
+class PhotoCreateView(LoginRequiredMixin, CreateView):
+	model = Photo
+	fields = ['title', 'description', 'image', 'tags']
+	template_name = 'photoapp/create.html'
+	success_url = reverse_lazy('photo:list')
+
+	def form_valid(self, form):
+		form.instance.submitter = self.request.user
+		return super().form_valid(form)
+
+class UserIsSubmitter(UserPassesTestMixin):
+	def get_photo(self):
+		return get_object_or_404(Photo, pk=self.kwargs.get('pk'))
 	
+	def test_func(self):
+		if self.request.user.is_authenticated:
+			return self.reqyest.user == self.get_photo().submitter
+		else:
+			raise PermissionDenied('Sorry, you are not allowed here.')
+
+class PhotoUpdateView(UserIsSubmitter, UpdateView):
+	template_name = 'photoapp/update.html'
+	model = Photo
+	fields = ['title', 'description', 'tags']
+	success_url = reverse_lazy('photo:list')
+
+class PhotoDeleteView(UserIsSubmitter, DeleteView):
+	template_name = 'photoapp/delete.html'
+	model = Photo
+	success_url = reverse_lazy('photo:list')
