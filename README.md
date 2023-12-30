@@ -6,4 +6,4 @@ active virtual environment: ```source .venv/bin/activate```
 
 
 [Tutorial](https://www.sitepoint.com/django-photo-sharing-app/) - 
-Currently on: URL Patterns
+Currently on: Authentication System
